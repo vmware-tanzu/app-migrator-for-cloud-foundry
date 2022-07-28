@@ -1,0 +1,22 @@
+export_dir: "export-integration-tests"
+skip_orgs:
+  - system
+  - p-spring-cloud-services
+max_parallel: 5
+non_interactive: true
+domains_to_add:
+  - new.domain
+domains_to_replace:
+  old.domain: new.domain
+source_api:
+  url: https://api.sys1.cf.example.com
+  username: admin
+  password: some-password
+  client_id:
+  client_secret:
+target_api:
+  url: https://api.sys2.cf.example.com
+  username: admin
+  password: some-password
+  client_id:
+  client_secret:

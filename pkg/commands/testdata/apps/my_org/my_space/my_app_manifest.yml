@@ -1,0 +1,14 @@
+applications:
+- name: my_app
+  buildpacks: []
+  command: ""
+  disk_quota: 1G
+  env: {}
+  health-check-type: port
+  instances: 1
+  memory: 1G
+  routes:
+  - route: a-hostname.a-domain.com/some_path
+  services:
+  - name-1508
+  stack: ""

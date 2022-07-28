@@ -1,0 +1,28 @@
+{
+  "total_results": 1,
+  "total_pages": 1,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+    {
+      "metadata": {
+        "guid": "311d34d1-c045-4853-845f-05132377ad7d",
+        "url": "/v2/routes/311d34d1-c045-4853-845f-05132377ad7d",
+        "created_at": "2016-06-08T16:41:44Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "host": "host-36",
+        "path": "",
+        "domain_guid": "ef91529f-7659-424c-96ac-68c55decb7bf",
+        "space_guid": "5489e195-c42b-4e61-bf30-323c331ecc01",
+        "service_instance_guid": null,
+        "port": null,
+        "domain_url": "/v2/private_domains/ef91529f-7659-424c-96ac-68c55decb7bf",
+        "space_url": "/v2/spaces/5489e195-c42b-4e61-bf30-323c331ecc01",
+        "apps_url": "/v2/routes/311d34d1-c045-4853-845f-05132377ad7d/apps",
+        "route_mappings_url": "/v2/routes/311d34d1-c045-4853-845f-05132377ad7d/route_mappings"
+      }
+    }
+  ]
+}

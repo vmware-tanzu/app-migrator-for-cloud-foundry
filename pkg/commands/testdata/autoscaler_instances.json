@@ -1,0 +1,7 @@
+{
+    "enabled": false,
+    "instance_limits": {
+        "min": 0,
+        "max": 100
+    }
+}

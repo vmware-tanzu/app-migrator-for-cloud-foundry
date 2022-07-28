@@ -1,0 +1,3 @@
+exclude_orgs: []
+domains_to_replace:
+  apps.cf1.example.com: apps.cf2.example.com

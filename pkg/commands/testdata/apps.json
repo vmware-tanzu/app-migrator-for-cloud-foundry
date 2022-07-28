@@ -1,0 +1,57 @@
+{
+    "total_results": 1,
+    "total_pages": 1,
+    "prev_url": null,
+    "next_url": null,
+    "resources": [
+      {
+        "metadata": {
+          "guid": "6064d98a-95e6-400b-bc03-be65e6d59622",
+          "url": "/v2/apps/6064d98a-95e6-400b-bc03-be65e6d59622",
+          "created_at": "2016-06-08T16:41:45Z",
+          "updated_at": "2016-06-08T16:41:45Z"
+        },
+        "entity": {
+          "name": "my_app",
+          "production": false,
+          "space_guid": "5489e195-c42b-4e61-bf30-323c331ecc01",
+          "stack_guid": "f6c960cc-98ba-4fd1-b197-ecbf39108aa2",
+          "buildpack": null,
+          "detected_buildpack": null,
+          "detected_buildpack_guid": null,
+          "environment_json": null,
+          "memory": 1024,
+          "instances": 1,
+          "disk_quota": 1024,
+          "state": "STOPPED",
+          "version": "f5696e0f-087d-49b0-9ad7-4756c49a6ba6",
+          "command": null,
+          "console": false,
+          "debug": null,
+          "staging_task_id": null,
+          "package_state": "PENDING",
+          "health_check_http_endpoint": "",
+          "health_check_type": "port",
+          "health_check_timeout": null,
+          "staging_failed_reason": null,
+          "staging_failed_description": null,
+          "diego": false,
+          "docker_image": null,
+          "docker_credentials": {
+            "username": null,
+            "password": null
+          },
+          "package_updated_at": "2016-06-08T16:41:45Z",
+          "detected_start_command": "",
+          "enable_ssh": true,
+          "ports": null,
+          "space_url": "/v2/spaces/5489e195-c42b-4e61-bf30-323c331ecc01",
+          "stack_url": "/v2/stacks/f6c960cc-98ba-4fd1-b197-ecbf39108aa2",
+          "routes_url": "/v2/apps/6064d98a-95e6-400b-bc03-be65e6d59622/routes",
+          "events_url": "/v2/apps/6064d98a-95e6-400b-bc03-be65e6d59622/events",
+          "service_bindings_url": "/v2/apps/6064d98a-95e6-400b-bc03-be65e6d59622/service_bindings",
+          "route_mappings_url": "/v2/apps/6064d98a-95e6-400b-bc03-be65e6d59622/route_mappings"
+        }
+      }
+    ]
+  }
