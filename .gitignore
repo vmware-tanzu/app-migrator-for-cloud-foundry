@@ -1,4 +1,36 @@
-# Ignore everything in this directory
-*
-# Except this file
-!.gitignore
+# built artifacts
+/bin
+/dist
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.tar
+*.gpg
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# coverage artifacts
+/coverage.txt
+/coverage.html
+
+# IntelliJ artifacts
+.idea
+
+# Visual Studio Code artifacts
+.vscode
+
+# OS turds
+.DS_Store
+
+# Direnv
+.envrc
+.envrc.*
+!.envrc.example
