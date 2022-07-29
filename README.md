@@ -1,5 +1,9 @@
 # app-migrator-for-cloud-foundry
 
+[![build workflow](https://github.com/vmware-tanzu/app-migrator-for-cloud-foundry/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/vmware-tanzu/app-migrator-for-cloud-foundry/actions/workflows/build.yml)
+![cod cov](https://github.com/vmware-tanzu/app-migrator-for-cloud-foundry/blob/badges/main/coverage.svg)
+
+
 ## Overview
 
 The `app-migrator` is a command-line tool for migrating [Application Instances](https://docs.cloudfoundry.org/concepts/diego/diego-architecture.html) from one [Cloud Foundry](https://docs.cloudfoundry.org/) (CF) or [Tanzu Application Service](https://tanzu.vmware.com/application-service) (TAS) to another.
