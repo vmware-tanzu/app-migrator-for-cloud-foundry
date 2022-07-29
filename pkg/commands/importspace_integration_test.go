@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
- package commands_test
+package commands_test
 
 import (
 	"fmt"
