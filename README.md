@@ -6,21 +6,6 @@
 
 The `app-migrator` is a command-line tool for migrating [Application Instances](https://docs.cloudfoundry.org/concepts/diego/diego-architecture.html) from one [Cloud Foundry](https://docs.cloudfoundry.org/) (CF) or [Tanzu Application Service](https://tanzu.vmware.com/application-service) (TAS) to another.
 
-## Documentation
-
-- **export** - Export all applications (from every org and space) from a foundation.
-- **export org** - Export only the applications hosted within an organization.
-- **export space** - Export only the applications hosted within a space.
-- **export app** - Export only a single application.
-- **export-incremental** - Export only the applications that have changed (from all orgs and spaces) since a previous export.
-- **import** - Import all applications from an export.
-- **import org** - Import only the applications hosted within an organization from an export.
-- **import space** - Import only the applications hosted within a space from an export.
-- **import app** - Import only a single application from an export.
-- **import-incremental** - Import only the applications that have changed (from all orgs and spaces) since a previous import.
-
-Check out the [docs](./docs/app-migrator.md) to see usage for all the commands.
-
 ## Cloud Controller API to Migration Process Mapping
 
 - Applications                      - App-Migrator
@@ -50,6 +35,52 @@ Check out the [docs](./docs/app-migrator.md) to see usage for all the commands.
 - Local UAA Users/Clients           - Other
 - LDAP Users                        - CF-Mgmt
 - Roles                             - CF-Mgmt
+
+## Documentation
+
+The `app-instance-migrator` requires user credentials or client credentials to communicate with the Cloud Foundry Cloud Controller API.
+
+The configuration for the CLI is specified in a file called `app-migrator.yml` which can be overridden with the following environment variables.
+
+- `APP_MIGRATOR_CONFIG_FILE` will override cli config file location [default: `./app-migrator.yml`]
+- `APP_MIGRATOR_CONFIG_HOME` will override cli config directory location [default: `.`, `$HOME`, or `$HOME/.config/app-migrator`]
+
+Create a `app-migrator.yml` using the following template.
+
+```yaml
+export_dir: /tmp/export-apps
+exclude_orgs:
+  - system
+source_api:
+  url: https://api.src.tas.example.com
+  # admin or client credentials (not both)
+  username: ""
+  password: ""
+  client_id: client-with-cloudcontroller-admin-permissions
+  client_secret: client-secret
+target_api:
+  url: https://api.dst.tas.example.com
+  # admin or client credentials (not both)
+  username: ""
+  password: ""
+  client_id: client-with-cloudcontroller-admin-permissions
+  client_secret: client-secret
+```
+
+### Commands
+
+- **export** - Export all applications (from every org and space) from a foundation.
+- **export org** - Export only the applications hosted within an organization.
+- **export space** - Export only the applications hosted within a space.
+- **export app** - Export only a single application.
+- **export-incremental** - Export only the applications that have changed (from all orgs and spaces) since a previous export.
+- **import** - Import all applications from an export.
+- **import org** - Import only the applications hosted within an organization from an export.
+- **import space** - Import only the applications hosted within a space from an export.
+- **import app** - Import only a single application from an export.
+- **import-incremental** - Import only the applications that have changed (from all orgs and spaces) since a previous import.
+
+Check out the [docs](./docs/app-migrator.md) to see usage for all the commands.
 
 ## Logs
 
@@ -89,7 +120,7 @@ To control the number of apps that are created as part of the test fixture, set 
 To run all the integration tests
 
 ```shell
-make test-integration
+make test-e2e
 ```
 
 Or to run just `export org` tests
