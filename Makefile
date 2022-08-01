@@ -48,11 +48,11 @@ test-import-org: ## Run import org integration tests only
 test-import-space: ## Run import space integration tests only
 	go test -timeout 15m -v -tags integration ./test/e2e/import_space_test.go
 
-.PHONY: test-integration
-test-integration: test-export-org test-import-org test-export-space test-import-space ## Run all the integration tests
+.PHONY: test-e2e
+test-e2e: test-export-org test-import-org test-export-space test-import-space ## Run all the integration tests
 
 .PHONY: test-all
-test-all: test test-integration ## Run all the tests including long running ones [default timeout is 15min]
+test-all: test test-e2e ## Run all the tests including long running ones [default timeout is 15min]
 
 test-bench: ## Run all the benchmark tests
 	go test -bench=. -benchmem ./...
