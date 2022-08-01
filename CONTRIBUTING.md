@@ -1,6 +1,6 @@
-# Contributing to app-migrator-for-cloud-foundry
+# Contributing to App Migrator for Cloud Foundry
 
-The app-migrator-for-cloud-foundry project team welcomes contributions from the community. Before you start working with app-migrator-for-cloud-foundry, please
+The App Migrator for Cloud Foundry project team welcomes contributions from the community. Before you start working with App Migrator for Cloud Foundry, please
 read our [Developer Certificate of Origin](https://cla.vmware.com/dco). All contributions to this repository must be
 signed as described on that page. Your signature certifies that you wrote the patch or have the right to pass it on
 as an open-source patch.

@@ -117,9 +117,17 @@ Check out the [docs](./docs/app-migrator.md) to see usage for all the commands.
 By default, all log output is appended to `/tmp/app-migrator.log`. You can override this location by setting the
 `APP_MIGRATOR_LOG_FILE` environment variable.
 
+## Community and Support
+
+Join us!
+
+If you have questions or want to get the latest project news, you can connect with us in the following ways:
+
+- Checkout our github issue/PR section
+
 ## Contributing
 
-The app-migrator-for-cloud-foundry project team welcomes contributions from the community. Before you start working with app-migrator-for-cloud-foundry, please
+The App Migrator for Cloud Foundry project team welcomes contributions from the community. Before you start working with App Migrator for Cloud Foundry, please
 read our [Developer Certificate of Origin](https://cla.vmware.com/dco). All contributions to this repository must be
 signed as described on that page. Your signature certifies that you wrote the patch or have the right to pass it on
 as an open-source patch. For more detailed information, refer to [CONTRIBUTING.md](CONTRIBUTING.md).
