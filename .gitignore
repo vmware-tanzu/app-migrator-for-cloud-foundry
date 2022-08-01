@@ -2,6 +2,12 @@
 /bin
 /dist
 
+# run artifacts
+/app_manifest.yml
+/app-migrator.yml
+/test/e2e/app-migrator.yml
+/export
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
