@@ -1,4 +1,4 @@
-# app-migrator-for-cloud-foundry
+# App Migrator for Cloud Foundry
 
 [![build workflow](https://github.com/vmware-tanzu/app-migrator-for-cloud-foundry/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/vmware-tanzu/app-migrator-for-cloud-foundry/actions/workflows/build.yml)
 
@@ -6,7 +6,7 @@
 
 The `app-migrator` is a command-line tool for migrating [Application Instances](https://docs.cloudfoundry.org/concepts/diego/diego-architecture.html) from one [Cloud Foundry](https://docs.cloudfoundry.org/) (CF) or [Tanzu Application Service](https://tanzu.vmware.com/application-service) (TAS) to another.
 
-## Cloud Controller API to Migration Process Mapping
+### Cloud Controller API to Migration Process Mapping
 
 - Applications                      - App-Migrator
 - Application Environment Variables - App-Migrator
@@ -35,6 +35,36 @@ The `app-migrator` is a command-line tool for migrating [Application Instances](
 - Local UAA Users/Clients           - Other
 - LDAP Users                        - CF-Mgmt
 - Roles                             - CF-Mgmt
+
+## Getting Started
+
+### Download latest release
+
+Download the `app-migrator-<OS>-amd64.tar.gz` from the most recent release listed on the [App Migrator for Cloud Foundry releases](https://github.com/vmware-tanzu/app-migrator-for-cloud-foundry/releases) page.
+
+Following are the instructions for installing version `v0.0.8`.
+
+#### For macOS
+
+```shell
+VERSION=v0.0.8
+wget -q https://github.com/vmware-tanzu/app-migrator-for-cloud-foundry/releases/download/${VERSION}/app-migrator-darwin-amd64.tgz
+tar -xvf app-migrator-darwin-amd64.tgz -C /usr/local/bin
+chmod +x /usr/local/bin/app-migrator
+```
+
+#### For linux
+
+```shell
+VERSION=v0.0.8
+wget -q https://github.com/vmware-tanzu/app-migrator-for-cloud-foundry/releases/download/${VERSION}/app-migrator-linux-amd64.tgz
+tar -xvf app-migrator-darwin-amd64.tgz -C /usr/local/bin
+chmod +x /usr/local/bin/app-migrator
+```
+
+### Build from source
+
+See the [development guide](./DEVELOPMENT.md) for instructions to build from source.
 
 ## Documentation
 
@@ -86,50 +116,6 @@ Check out the [docs](./docs/app-migrator.md) to see usage for all the commands.
 
 By default, all log output is appended to `/tmp/app-migrator.log`. You can override this location by setting the
 `APP_MIGRATOR_LOG_FILE` environment variable.
-
-## For Developers
-
-This project uses Go 1.16+ and Go modules. Clone the repo to any directory.
-
-Build and run all checks
-
-```shell
-make all
-```
-
-Build the project
-
-```shell
-make build
-```
-
-Run the tests
-
-```shell
-make test
-```
-
-Run `make help` for all other tasks.
-
-### Integration tests
-
-To run the integration tests, you need to place an `app-migrator.yml` file under the [test/e2e](./test/e2e) directory.
-To control the number of apps that are created as part of the test fixture, set `TEST_APP_COUNT`
-(e.g. `export TEST_APP_COUNT=3`). The default is `3`.
-
-To run all the integration tests
-
-```shell
-make test-e2e
-```
-
-Or to run just `export org` tests
-
-```shell
-make test-export-org
-```
-
-See `Makefile` or run `make help` for all test targets.
 
 ## Contributing
 
