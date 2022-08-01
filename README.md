@@ -117,14 +117,6 @@ Check out the [docs](./docs/app-migrator.md) to see usage for all the commands.
 By default, all log output is appended to `/tmp/app-migrator.log`. You can override this location by setting the
 `APP_MIGRATOR_LOG_FILE` environment variable.
 
-## Community and Support
-
-Join us!
-
-If you have questions or want to get the latest project news, you can connect with us in the following ways:
-
-- Checkout our github issue/PR section
-
 ## Contributing
 
 The App Migrator for Cloud Foundry project team welcomes contributions from the community. Before you start working with App Migrator for Cloud Foundry, please
