@@ -7,6 +7,7 @@
 /app-migrator.yml
 /test/e2e/app-migrator.yml
 /export
+/scripts
 
 # Binaries for programs and plugins
 *.exe
