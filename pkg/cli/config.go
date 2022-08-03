@@ -176,8 +176,6 @@ func (c *Config) initViperConfig() {
 	if err := v.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
 			log.Fatalf("Failed to load config file: %s, error: %s", v.ConfigFileUsed(), err)
-		} else {
-			log.Fatalf("%v", err)
 		}
 	}
 	c.applyViperOverrides(v)

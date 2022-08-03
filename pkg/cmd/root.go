@@ -60,7 +60,7 @@ func CreateRootCommand(ctx *context.Context) *cobra.Command {
 
 	// show a migration summary for all commands
 	rootCmd.PersistentPostRun = func(cmd *cobra.Command, args []string) {
-		if cmd.Name() == "help" {
+		if cmd.Name() == "help" || cmd.Name() == "completion" {
 			return
 		}
 		err := cli.PostRunSaveMetadata(ctx)
