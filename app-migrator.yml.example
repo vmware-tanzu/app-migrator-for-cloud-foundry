@@ -1,0 +1,21 @@
+export_dir: "export"
+exclude_orgs:
+  - system
+max_parallel: 5
+non_interactive: true
+domains_to_add:
+  - new.domain
+domains_to_replace:
+  old.domain: new.domain
+source_api:
+  url: https://api.sys1.cf.example.com
+  username: admin
+  password: some-password
+  client_id:
+  client_secret:
+target_api:
+  url: https://api.sys2.cf.example.com
+  username: admin
+  password: some-password
+  client_id:
+  client_secret:
