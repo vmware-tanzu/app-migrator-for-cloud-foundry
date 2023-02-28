@@ -40,6 +40,7 @@ type Config struct {
 	SourceApi        CloudController `mapstructure:"source_api"`
 	TargetApi        CloudController `mapstructure:"target_api"`
 	ConcurrencyLimit int             `mapstructure:"concurrency_limit"`
+	DisplayProgress  bool            `mapstructure:"display_progress"`
 	Debug            bool
 }
 

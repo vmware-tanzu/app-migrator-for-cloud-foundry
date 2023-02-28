@@ -26,12 +26,14 @@ import (
 )
 
 type DefaultQueryResultsProcessor struct {
-	cf cf.Client
+	cf                 cf.Client
+	displayProgressBar bool
 }
 
-func NewQueryResultsProcessor(cf cf.Client) DefaultQueryResultsProcessor {
+func NewQueryResultsProcessor(cf cf.Client, displayProgressBar bool) DefaultQueryResultsProcessor {
 	return DefaultQueryResultsProcessor{
-		cf: cf,
+		cf:                 cf,
+		displayProgressBar: displayProgressBar,
 	}
 }
 
@@ -141,12 +143,12 @@ func (w DefaultQueryResultsProcessor) processResults(ctx *context.Context, in <-
 	results := make(chan context.ProcessResult, batchSize)
 	var wg sync.WaitGroup
 	p := ctx.Progress
-	if p == nil {
+	if p == nil && w.displayProgressBar {
 		p = mpb.New(
 			mpb.WithWidth(64),
 		)
+		ctx.Progress = p
 	}
-	ctx.Progress = p
 
 	total := batchSize
 	if numOfApps < batchSize {
