@@ -153,6 +153,7 @@ type Context struct {
 	AutoScalerExporter AutoScalerExporter
 	Logger             *log.Logger
 	Progress           *mpb.Progress
+	DisplayProgress    bool
 }
 
 func (ctx *Context) InitLogger() {
