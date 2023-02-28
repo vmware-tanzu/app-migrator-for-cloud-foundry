@@ -1,6 +1,6 @@
-/* 
+/*
  *  Copyright 2022 VMware, Inc.
- *  
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -75,6 +75,7 @@ func CreateRootCommand(ctx *context.Context) *cobra.Command {
 
 	rootCmd.PersistentFlags().BoolVar(&ctx.Debug, "debug", false, "Enable debug logging")
 	rootCmd.PersistentFlags().StringVar(&ctx.ExportDir, "export-dir", ctx.ExportDir, "Directory where apps will be placed or read")
+	rootCmd.PersistentFlags().BoolVar(&ctx.DisplayProgress, "display-progress", true, "Display progress bar")
 
 	return rootCmd
 }
@@ -171,6 +172,7 @@ func newCFClient(ctx *context.Context, isExport bool) {
 	ctx.ExportDir = cfg.ExportDir
 	ctx.IncludedOrgs = cfg.IncludedOrgs
 	ctx.ExcludedOrgs = cfg.ExcludedOrgs
+	ctx.DisplayProgress = cfg.DisplayProgress
 	ctx.SpaceExporter = export.NewConcurrentSpaceExporter(
 		process.NewQueryResultsProcessor(ctx.ExportCFClient, ctx.DisplayProgress),
 	)
