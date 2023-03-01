@@ -20,11 +20,9 @@ import (
 	"strconv"
 	"sync"
 
+	"github.com/cloudfoundry-community/go-cfclient"
 	"github.com/vmware-tanzu/app-migrator-for-cloud-foundry/pkg/cf"
 	"github.com/vmware-tanzu/app-migrator-for-cloud-foundry/pkg/context"
-	"github.com/vmware-tanzu/app-migrator-for-cloud-foundry/pkg/process"
-
-	"github.com/cloudfoundry-community/go-cfclient"
 )
 
 //DefaultConcurrencyLimit controls the number of apps that are multiplexed across goroutines. Setting this to a large
@@ -35,13 +33,14 @@ const DefaultConcurrencyLimit = 5
 
 type ConcurrentSpaceExporter struct {
 	queryResultsProcessor context.QueryResultsProcessor
+	queryResultsCollector context.QueryResultsCollector
 }
 
-func NewConcurrentSpaceExporter(processor context.QueryResultsProcessor) *ConcurrentSpaceExporter {
-	c := &ConcurrentSpaceExporter{
+func NewConcurrentSpaceExporter(processor context.QueryResultsProcessor, queryResultsCollector context.QueryResultsCollector) *ConcurrentSpaceExporter {
+	return &ConcurrentSpaceExporter{
 		queryResultsProcessor: processor,
+		queryResultsCollector: queryResultsCollector,
 	}
-	return c
 }
 
 func (c *ConcurrentSpaceExporter) ExportSpace(ctx *context.Context, space cfclient.Space, processor context.ProcessFunc) (<-chan context.ProcessResult, error) {
@@ -76,5 +75,5 @@ func (c *ConcurrentSpaceExporter) ExportSpace(ctx *context.Context, space cfclie
 		}
 	}
 
-	return c.queryResultsProcessor.ExecutePageQuery(ctx, process.NewAppsQueryResultsCollector(ctx.ConcurrencyLimit), listApps, processor)
+	return c.queryResultsProcessor.ExecutePageQuery(ctx, c.queryResultsCollector, listApps, processor)
 }

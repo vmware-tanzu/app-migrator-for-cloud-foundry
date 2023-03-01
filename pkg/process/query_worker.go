@@ -21,18 +21,15 @@ import (
 	"time"
 
 	"github.com/vbauerster/mpb/v7"
-	"github.com/vmware-tanzu/app-migrator-for-cloud-foundry/pkg/cf"
 	"github.com/vmware-tanzu/app-migrator-for-cloud-foundry/pkg/context"
 )
 
 type DefaultQueryResultsProcessor struct {
-	cf                 cf.Client
 	displayProgressBar bool
 }
 
-func NewQueryResultsProcessor(cf cf.Client, displayProgressBar bool) DefaultQueryResultsProcessor {
+func NewQueryResultsProcessor(displayProgressBar bool) DefaultQueryResultsProcessor {
 	return DefaultQueryResultsProcessor{
-		cf:                 cf,
 		displayProgressBar: displayProgressBar,
 	}
 }
@@ -102,10 +99,8 @@ func (w DefaultQueryResultsProcessor) ExecutePageQuery(ctx *context.Context, que
 		wg.Add(1)
 		go func(processResults <-chan context.ProcessResult, page int) {
 			defer wg.Done()
-			resultCount := 0
 			for processResult := range processResults {
 				collectedResults <- processResult
-				resultCount = resultCount + 1
 			}
 		}(results, page)
 
@@ -126,8 +121,7 @@ func (w DefaultQueryResultsProcessor) process(ctx *context.Context, queryResults
 	if resultsPerPage == 0 {
 		return nil
 	}
-	batchSize := resultsPerPage
-	workerChan := make(chan context.QueryResult, batchSize)
+	workerChan := make(chan context.QueryResult, resultsPerPage)
 
 	go func() {
 		defer close(workerChan)
@@ -136,7 +130,7 @@ func (w DefaultQueryResultsProcessor) process(ctx *context.Context, queryResults
 		}
 	}()
 
-	return w.processResults(ctx, workerChan, processor, numOfApps, batchSize)
+	return w.processResults(ctx, workerChan, processor, numOfApps, resultsPerPage)
 }
 
 func (w DefaultQueryResultsProcessor) processResults(ctx *context.Context, in <-chan context.QueryResult, processor context.ProcessFunc, numOfApps, batchSize int) <-chan context.ProcessResult {

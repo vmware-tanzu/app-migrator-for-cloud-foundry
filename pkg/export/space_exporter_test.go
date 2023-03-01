@@ -16,6 +16,8 @@ package export
 
 import (
 	"bytes"
+	"fmt"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/url"
 	"os"
@@ -38,6 +40,7 @@ func TestNewConcurrentSpaceExporter(t *testing.T) {
 	type args struct {
 		resultsPerPage int
 		processor      *contextfakes.FakeQueryResultsProcessor
+		collector      *contextfakes.FakeQueryResultsCollector
 	}
 	processor := &contextfakes.FakeQueryResultsProcessor{
 		ExecutePageQueryStub: func(ctx *context.Context, collector context.QueryResultsCollector, f func(page int, collector context.QueryResultsCollector) func() (int, error), processFunc context.ProcessFunc) (<-chan context.ProcessResult, error) {
@@ -47,6 +50,12 @@ func TestNewConcurrentSpaceExporter(t *testing.T) {
 			return results, nil
 		},
 	}
+	collector := &contextfakes.FakeQueryResultsCollector{
+		GetResultsStub: func() <-chan context.QueryResult {
+			results := make(chan context.QueryResult, 1)
+			return results
+		},
+	}
 	tests := []struct {
 		name string
 		args args
@@ -54,8 +63,8 @@ func TestNewConcurrentSpaceExporter(t *testing.T) {
 	}{
 		{
 			name: "new concurrent space exporter",
-			args: args{resultsPerPage: 1, processor: processor},
-			want: &ConcurrentSpaceExporter{queryResultsProcessor: processor},
+			args: args{resultsPerPage: 1, processor: processor, collector: collector},
+			want: &ConcurrentSpaceExporter{queryResultsProcessor: processor, queryResultsCollector: collector},
 		},
 	}
 	for _, tt := range tests {
@@ -63,7 +72,7 @@ func TestNewConcurrentSpaceExporter(t *testing.T) {
 			t.Cleanup(func() {
 				cache.Cache = nil
 			})
-			if got := NewConcurrentSpaceExporter(tt.args.processor); !reflect.DeepEqual(got, tt.want) {
+			if got := NewConcurrentSpaceExporter(tt.args.processor, tt.args.collector); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewConcurrentSpaceExporter() = %v, want %v", got, tt.want)
 			}
 		})
@@ -71,25 +80,26 @@ func TestNewConcurrentSpaceExporter(t *testing.T) {
 }
 
 func Test_exportSpace(t *testing.T) {
+	numOfApps := int32(5)
 	type fields struct {
 		processor *contextfakes.FakeQueryResultsProcessor
 	}
 	type args struct {
-		ctx       *context.Context
-		space     cfclient.Space
-		processor func(ctx *context.Context, r context.QueryResult) context.ProcessResult
+		ctx     *context.Context
+		space   cfclient.Space
+		process context.ProcessFunc
 	}
 	pwd, _ := os.Getwd()
 	tests := []struct {
 		name    string
 		fields  fields
 		args    args
-		want    context.ProcessResult
+		want    []context.ProcessResult
 		wantErr bool
 		handler http.Handler
 	}{
 		{
-			name: "returns an app",
+			name: "exports an app",
 			fields: fields{
 				processor: &contextfakes.FakeQueryResultsProcessor{
 					ExecutePageQueryStub: func(ctx *context.Context, collector context.QueryResultsCollector, f func(page int, collector context.QueryResultsCollector) func() (int, error), processFunc context.ProcessFunc) (<-chan context.ProcessResult, error) {
@@ -110,20 +120,56 @@ func Test_exportSpace(t *testing.T) {
 					AutoScalerExporter: NewAutoScalerExporter(),
 					ExportCFClient: &fakes.FakeClient{
 						ListAppsByQueryStub: func(values url.Values) ([]cfclient.App, error) {
-							return []cfclient.App{{Name: "my_app"}}, nil
+							return createApps(numOfApps), nil
 						},
 					},
 				},
 				space: cfclient.Space{
 					Name: "my_space",
 				},
-				processor: func(ctx *context.Context, r context.QueryResult) context.ProcessResult {
+				process: func(ctx *context.Context, r context.QueryResult) context.ProcessResult {
 					return context.ProcessResult{Value: r.Value}
 				},
 			},
-			want: context.ProcessResult{
-				Value: "my_app",
+			want:    []context.ProcessResult{{Value: "my_app"}},
+			wantErr: false,
+		},
+		{
+			name: "exports multiple apps",
+			fields: fields{
+				processor: &contextfakes.FakeQueryResultsProcessor{
+					ExecutePageQueryStub: func(ctx *context.Context, collector context.QueryResultsCollector, f func(page int, collector context.QueryResultsCollector) func() (int, error), proc context.ProcessFunc) (<-chan context.ProcessResult, error) {
+						results := make(chan context.ProcessResult, numOfApps)
+						defer close(results)
+						for n := 0; n < int(numOfApps); n++ {
+							results <- context.ProcessResult{Value: fmt.Sprintf("%s_%d", "my_app", n)}
+						}
+						return results, nil
+					},
+				},
 			},
+			args: args{
+				ctx: &context.Context{
+					ExportDir:          filepath.Join(pwd, "testdata/apps"),
+					Metadata:           metadata.NewMetadata(),
+					Summary:            report.NewSummary(&bytes.Buffer{}),
+					DropletExporter:    NewDropletExporter(),
+					ManifestExporter:   NewManifestExporter(),
+					AutoScalerExporter: NewAutoScalerExporter(),
+					ExportCFClient: &fakes.FakeClient{
+						ListAppsByQueryStub: func(values url.Values) ([]cfclient.App, error) {
+							return createApps(numOfApps), nil
+						},
+					},
+				},
+				space: cfclient.Space{
+					Name: "my_space",
+				},
+				process: func(ctx *context.Context, r context.QueryResult) context.ProcessResult {
+					return context.ProcessResult{Value: r.Value}
+				},
+			},
+			want:    createResults(numOfApps),
 			wantErr: false,
 		},
 	}
@@ -135,16 +181,39 @@ func Test_exportSpace(t *testing.T) {
 			p := &ConcurrentSpaceExporter{
 				queryResultsProcessor: tt.fields.processor,
 			}
-
-			got, err := p.ExportSpace(tt.args.ctx, tt.args.space, tt.args.processor)
+			got, err := p.ExportSpace(tt.args.ctx, tt.args.space, tt.args.process)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("exportSpace() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			result := <-got
-			if !reflect.DeepEqual(result, tt.want) {
-				t.Errorf("exportSpace() got = %v, want %v", result, tt.want)
+			assert.Equal(t, len(tt.want), len(got))
+			i := 0
+			for r := range got {
+				if !reflect.DeepEqual(r, tt.want[i]) {
+					t.Errorf("exportSpace() got = %v, want %v", r, tt.want[i])
+				}
+				i++
 			}
 		})
 	}
+}
+
+func createResults(count int32) []context.ProcessResult {
+	var results []context.ProcessResult
+	for i := 0; i < int(count); i++ {
+		results = append(results, context.ProcessResult{Value: newAppName(i)})
+	}
+	return results
+}
+
+func createApps(count int32) []cfclient.App {
+	var apps []cfclient.App
+	for i := 0; i < int(count); i++ {
+		apps = append(apps, cfclient.App{Name: newAppName(i)})
+	}
+	return apps
+}
+
+func newAppName(i int) string {
+	return fmt.Sprintf("%s_%d", "my_app", i)
 }
