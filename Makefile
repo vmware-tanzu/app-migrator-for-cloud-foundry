@@ -55,7 +55,7 @@ test-e2e: test-export-org test-import-org test-export-space test-import-space ##
 test-all: test test-e2e ## Run all the tests including long running ones [default timeout is 15min]
 
 test-bench: ## Run all the benchmark tests
-	go test -bench=. -benchmem ./...
+	go test -run=^# -bench=. -benchmem ./...
 
 .PHONY: install
 install: build ## Copy build to GOPATH/bin
