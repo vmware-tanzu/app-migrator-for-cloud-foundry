@@ -40,7 +40,7 @@ func TestNewConcurrentSpaceImporter(t *testing.T) {
 		resultsPerPage int
 		worker         process.DefaultQueryResultsProcessor
 	}
-	worker := process.NewQueryResultsProcessor(new(fakes.FakeClient), false)
+	worker := process.NewQueryResultsProcessor(false)
 	tests := []struct {
 		name string
 		args args

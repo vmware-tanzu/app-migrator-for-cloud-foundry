@@ -174,9 +174,10 @@ func newCFClient(ctx *context.Context, isExport bool) {
 	ctx.ExcludedOrgs = cfg.ExcludedOrgs
 	ctx.DisplayProgress = cfg.DisplayProgress
 	ctx.SpaceExporter = export.NewConcurrentSpaceExporter(
-		process.NewQueryResultsProcessor(ctx.ExportCFClient, ctx.DisplayProgress),
+		process.NewQueryResultsProcessor(ctx.DisplayProgress),
+		process.NewAppsQueryResultsCollector(ctx.ConcurrencyLimit),
 	)
 	ctx.SpaceImporter = im.NewConcurrentSpaceImporter(
-		process.NewQueryResultsProcessor(ctx.ImportCFClient, ctx.DisplayProgress),
+		process.NewQueryResultsProcessor(ctx.DisplayProgress),
 	)
 }
