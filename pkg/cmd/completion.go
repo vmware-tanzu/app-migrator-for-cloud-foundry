@@ -66,7 +66,7 @@ func createCompletionCommand() *cobra.Command {
 	`,
 		DisableFlagsInUseLine: true,
 		ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
-		Args:                  cobra.ExactValidArgs(1),
+		Args:                  matchAll(cobra.MinimumNArgs(1), cobra.OnlyValidArgs),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			switch args[0] {
 			case "bash":
@@ -83,4 +83,15 @@ func createCompletionCommand() *cobra.Command {
 	}
 
 	return completionCmd
+}
+
+func matchAll(checks ...cobra.PositionalArgs) cobra.PositionalArgs {
+	return func(cmd *cobra.Command, args []string) error {
+		for _, check := range checks {
+			if err := check(cmd, args); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
 }
